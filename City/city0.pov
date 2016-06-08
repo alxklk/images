@@ -18,7 +18,7 @@ global_settings
 #include "env.inc"
 #include "terracotta.inc"
 
-#declare area=1; 
+#declare area=0; 
 #declare areacount=6;
 #declare areadacount=2;
 #declare areasize=5;
@@ -48,16 +48,14 @@ camera{
 #include "house0.inc"
 
 #include "tree.inc"
-
-
 blob{
  #declare maxnest=5;
  tree(true,true,false, 0,-0.1*y,y*0.5)
  threshold 0.7
  rotate y*30
  translate -x*0.4
- scale 0.4
- translate <0.4,-0.2,-0.7>
+ scale 0.5
+ translate <0.4,-0.1,-0.7>
 } 
 
 
@@ -223,3 +221,98 @@ difference
 	}*/
 
 //plane{-y,0 texture{desert}}
+#include "wire.inc"
+
+#declare wireu=
+union{
+	wire(10,0.01,0.001,0.023)
+	rotate y*90
+	scale 0.031
+	texture{st pigment{color rgb <0.2, 0.1, 0.1>}}
+}
+
+union{
+	wireu
+	translate x*0.95+z*0.85+y*0.29
+	}
+
+union{
+	wireu
+	translate x*0.95+z*0.5+y*0.29
+	}
+
+union{
+	wireu
+	rotate -x*40+y*30
+	translate x*0.95+z*0.15+y*0.26
+	}
+
+#include "sect.inc"
+
+#declare bol=
+union{
+	sect(20,20,1,1,0.5)	
+	scale 2
+	//box{-1,1 scale 3}
+	
+	
+	rotate x*90 translate y*2 rotate y*90 scale 0.04 
+}
+
+#declare ztext=	texture
+	{
+		function{max(0,min(1,y*6-0.1+0.1*f_granite(x*5,y*5,z*5)))}
+		texture_map
+		{
+			[0,desert]
+			[1,terracotta pigment{color rgb<0.95,0.9,0.85>}normal{granite 0.01 scale 0.1}]
+		}
+	}  
+
+
+union{
+object{bol rotate -z*20 translate x*0.95-z*0.02-y*0.05 rotate -x*15}
+object{bol translate x*0.95+z*0.35}
+object{bol translate x*0.95+z*0.7}
+	texture{ztext}  
+}
+
+union{
+	superellipsoid{<0.1,0.05> rotate x*90 scale <0.012,0.3,0.012> translate <0.95,0,0.875>} 
+	superellipsoid{<0.1,0.05> rotate x*90 scale <0.012,0.3,0.012> translate <0.95,0,0.525>} 
+	superellipsoid{<0.1,0.05> rotate x*90 scale <0.012,0.3,0.012> rotate -x*10 translate <0.95,0,0.175>} 
+	texture{ztext}
+}	
+
+#declare ztest=	texture
+	{
+		function{max(0,min(1,y*6-0.1+0.1*f_granite(x*5,y*5,z*5)))}
+		texture_map
+		{
+			[0,desert]
+			[1,st finish{reflection 0.05 diffuse 0.8 brilliance 0.5 phong 0.1 specular 0.2}
+				pigment{color rgb<0.95,0.9,0.85>}normal{granite 0.01 scale 0.1}]
+		}
+	}  
+
+
+union{
+	intersection
+	{
+		union{
+	superellipsoid{<0.5,0.5> rotate x*90 }
+	superellipsoid{<0.5,0.5> rotate x*90
+		matrix 
+		<
+		1,0,0,
+		-0.2,1,0,
+		0,0,1,
+		0.2,0,0
+		>
+	}
+		}
+		box{-2,2 translate y*2.1}
+	 }
+	scale <0.35,0.3,0.15> translate <0.4,0,0.7>
+	texture{ztest} 
+}
