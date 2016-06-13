@@ -14,7 +14,7 @@ global_settings
 #include "env.inc"
 #include "terracotta.inc"
 
-#declare area=1; 
+#declare area=0; 
 #declare areacount=6;
 #declare areadacount=2;
 #declare areasize=5;
@@ -141,17 +141,17 @@ union{
 }
 #end
 
-#macro towr(n, h, h1)
+#macro towr(n, h, h1, w)
 union{
 	#local i=0;
 	#while(i<n)
 
 	intersection{
 	 union{
-	 	ho1(1,1,h,h1,0.01,0.1)
-		union{win0(1.5,1,1,1.8,0.05,0.1,0.55) rotate -z*90 rotate y*90 scale 0.2 translate z+y*0.7}
+	 	ho1(w+1,w,h,h1,0.01,0.1)
+//		union{win0(1.5,1,1,1.8,0.05,0.1,0.55) rotate -z*90 rotate y*90 scale 0.2 translate z+y*0.7}
 	 	}
-	 box{0,<1.75,h+h1+1,1.75> rotate -y*45 scale x*tan(pi/n)}
+	 box{0,<w*2.5,h+h1+1,w*2.5> rotate -y*45 scale x*tan(pi/n)}
 	 rotate y*i*360/n
 	}
 		#local i=i+1;
@@ -209,14 +209,14 @@ union{
 
 	union{ho1(0.5,0.5,2.5,0.5,0.02,0.1)rotate y*90 translate -x*2.5-z*0.2}
 
-	union{ho1(0.35,0.5,4.05,0.5,0.02,0.1)rotate y*90 translate -x*2.0-z*0.2}
+	union{ho1(0.35,0.75,4.05,0.5,0.02,0.1)rotate y*90 translate -x*1.75-z*0.2}
 	union{win0(1.3,1.0,2,1.8,0.05,0.1,0.55) rotate -z*90 scale 0.25 translate -x*2.5+y*3.5-z*0.2}
 
 	union{ho1(0.6,1.5,2.2,0.5,0.02,0.1)rotate y*90 translate -x*2.5+z*1.3}
 	union{win0(2,0.8,2,1.5,0.05,0.1,0.55) rotate -z*90 scale 0.25 translate -x*4.0+y*1.25+z*1.5}
 	union{win0(2,0.8,2,1.5,0.05,0.1,0.55) rotate -z*90 scale 0.25 translate -x*4.0+y*1.25+z*1.1}
 
-	union{ho1(0.5,0.7,0,0.25,0.02,0.1)rotate y*90 translate -x*3.0-z*0.2+y*2.25}
+	union{ho1(0.5,0.7,0.0,0.25,0.02,0.1)rotate y*90 translate -x*3.0-z*0.2+y*2.25}
 	union{box{-1,1 scale y*3.5+z*1.5+x*0.1} scale 0.25 translate -x*3.0+y*0.7-z*0.2 texture{roof pigment{color rgb <1,0.8,0.4>}}}
 	union{win0(1.8,0.9,2,3,0.05,0.05,0.55) rotate -z*90 scale 0.25 translate -x*3.02+y*1.0-z*0.2}
 
@@ -228,5 +228,24 @@ union{
 
 object{house1 scale 0.1 translate <0.5,0,-0.5>}
 object{house2 scale 0.1 translate <0.5,0,0.5>}
+
+union{
+	union{ho1(1.5,1.5,2.75,1.25,0.01,0.1) rotate y*90 translate -z*3}
+	union{ho1(1.5,1.5,2.75,1.25,0.01,0.1) translate -x*3}
+	union{ho1(1.5,1,5.5,1.25,0.01,0.1) translate -x*2}
+	union{towr(4,6,2,1.5)}
+	union{towr(18,2.5,1.5,0.5) translate -x*2.5+y*5}
+	union{towr(18,4,1.5,1.25) translate y*6}
+	union{towr(18,3.5,1.5,0.5) translate -z*3.0+y*2}
+
+	union{win0(2,3.0,3,1.8,0.05,0.1,0.55) rotate -z*90 scale 0.25 translate -x-z*2+y*1.25}
+
+	union{box{-1,1 scale y*3.5+z*1.5+x*0.1} scale 0.25 translate -x*2.1+y*0.7 texture{roof pigment{color rgb <1,0.8,0.4>}}}
+	union{win0(1.8,0.9,2,3,0.05,0.05,0.55) rotate -z*90 scale 0.25 translate -x*2.12+y*1.0}
+	scale 0.1
+	translate -x*0.5
+}
+
+
 
 //union{towr(16,1.5,1.5) scale .2}
