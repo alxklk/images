@@ -14,7 +14,7 @@ global_settings
 #include "env.inc"
 #include "terracotta.inc"
 
-#declare area=1; 
+#declare area=0; 
 #declare areacount=6;
 #declare areadacount=2;
 #declare areasize=5;
@@ -88,7 +88,10 @@ prism{
 
 #macro block0(l,h,c)
 #debug c
-	#if(c="1")
+	#if(c=" ")
+	#elseif(c="a")
+		box{0,<l,h,0.1> texture{st}}
+	#elseif(c="1")
 		box{0,<l,h,0.1> texture{wall}}
 	#elseif(c="2")
 		difference
@@ -131,6 +134,8 @@ prism{
 			box{-0.1,<l,h,l/2>}
 			texture{balc}
 		}
+	#elseif(c="5")
+		union{win0(l,h,1.6,2,0.05,0.1,0.55) rotate -x*90 translate <l,h,0> scale 0.5 translate z*0.1}
 	#end
 #end
 
@@ -153,6 +158,9 @@ prism{
  #local ls=n;
  #local dp=p1-p0;
  #local len=vlength(dp);
+ #if(n<0)
+ 	#local ls=floor(len/2.5);
+ #end
 
  #local wlen=0;
  #local a=0;
@@ -172,8 +180,17 @@ prism{
   
   union{
   	block0(len*ll/wlen,2.5,char)
+  	#if(reversed) scale <1,1,-1>#end
 //  	cylinder{0.1*x,len*ll*x/wlen,0.1 translate y*3}
-  	rotate atan2(dp.x,dp.y)*180/pi*y
+  	#if(dp.y=0)
+  		#if(dp.x<0)
+		  	rotate -90*y
+		#else
+		  	rotate 90*y
+		#end
+	#else
+	  	rotate atan2(dp.x,dp.y)*180/pi*y
+	#end
   	rotate -y*90
     #local pos=(p0+dp*pl/wlen);
   	translate <pos.x,0,pos.y> 
@@ -209,16 +226,47 @@ prism{
 #end 
 
 #declare roof=texture{pigment{color rgb <0.3,.3,.5>}}
-#declare wall=texture{finish{diffuse 1 ambient 0.2} pigment{brick color rgb <.4,.45,.45> color rgb <1.0,.65,.22>}scale 0.035 }
+//#declare wall=texture{finish{diffuse 1 ambient 0.2} pigment{brick color rgb <.4,.45,.45> color rgb <1.0,.65,.22>}scale 0.035 }
+#declare wall=texture{finish{diffuse 1.2 ambient 0.3} pigment{/*brick color rgb <.4,.45,.45> */color rgb <1.0,1.05,1.2>}scale 0.035 }
 #declare glass=texture{st}
 #declare frame=texture{sten pigment{color rgb 1}}
 #declare balc =texture{finish{diffuse 1 ambient 0.2} pigment{color rgb 1}}
 
+#declare reversed=false;
+#declare NP=9;
+#declare h0p=array[NP]{<0,10><30,0><30,-2><34,-2><34,0><64,0><64,10><30,10><5,20>};
+#declare h0s=array[9] {"232", "1",  "4",  "1",  "232",  "2",  "2",    "2",  "23"};
+#declare h0w=array[9] {  "2", "1",  "1",  "1",    "2",  "1",  "1",    "1",  "23"};
+#declare h0n=array[9] {   9 ,  1 ,   1 ,   1 ,     9 ,   5 ,   5 ,     5 ,    5 };
 
-#declare h0p=array[10]{<0,10><30,0><30,-2><34,-2><34,0><64,0><64,10><30,10><5,20><0,10>};
-#declare h0s=array[10]{"0", "232", "1",  "4",  "1",  "232",  "1",  "1",    "1",  "23"};
-#declare h0w=array[10]{"0", "232", "1",  "1",  "1",  "232",  "1",  "1",    "1",  "23"};
-#declare h0n=array[10]{ 0,     9 ,  1 ,   1 ,   1 ,      9,   5 ,   5 ,     5 ,   5 };
+
+#declare reversed=true;
+#declare NP=8;
+#declare h0p=array[NP]{
+<
+0,0><0,-190><-40,0><0,215><20,25><260,0><0,-50><-240,0
+>
+};
+
+#declare i=0;
+#declare cp=<0,0>;
+#while(i<NP)
+	#declare cp=cp+h0p[i]*0.2;
+	#declare h0p[i]=cp;
+	#declare i=i+1;
+#end
+
+#declare h0s=array[100];
+#declare h0w=array[100];
+#declare h0n=array[100];
+#declare i=0;
+#while(i<100)
+	#declare h0s[i]="23";
+	#declare h0w[i]="12";
+	#declare h0n[i]=-5;
+	#declare i=i+1;
+#end
+
 
 #declare home1=
 union{
@@ -226,8 +274,8 @@ union{
 #while(i<15)
 union{
 	#declare j=0;
-	#while(j<9)
-	floorst(h0p[j],h0p[j+1],h0s[j+1],h0w[j+1],h0n[j+1])
+	#while(j<NP)
+	floorst(h0p[j],h0p[mod(j+1,NP)],h0s[j],h0w[j],h0n[j])
 //	#declare j=1;
 //	floorst(h0p[j],h0p[j+1],h0s[j+1],h0w[j+1],h0n[j+1])
 //	floorst(<0,0>,<10,0>,"34","12",4)
@@ -244,9 +292,9 @@ prism
 {
  linear_sweep
  linear_spline
- 0,0.1,10
+ 0,0.1,NP+1
  #declare j=0;
- #while(j<9)
+ #while(j<NP)
 	h0p[j]
  #declare j=j+1;
  #end
@@ -256,4 +304,11 @@ prism
  }
 }
 
+fog{fog_type 2 distance 3.0 color rgb <0.8,0.95,1>*1.2
+	fog_offset 0.1
+	fog_alt 0.2
+	
+	}
 object{home1 scale 0.015 translate <-0.5,0,-0.5>}
+object{home1 scale 0.015 rotate -y*90 translate <-0.5,0,0>}
+
