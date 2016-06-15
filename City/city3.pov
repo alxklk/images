@@ -24,6 +24,10 @@ global_settings
 #declare l1=true;
 #declare l2=true;
 
+fog{fog_type 2 distance 3.0 color rgb <0.8,0.95,1>*1.2
+	fog_offset 0.1
+	fog_alt 0.2
+	}
 
 #include "lights.inc"
 
@@ -89,24 +93,26 @@ prism{
 #macro block0(l,h,c)
 #debug c
 	#if(c=" ")
+	#elseif(c=".")
+		cylinder{0,h*y,0.1 texture{wall}}
 	#elseif(c="a")
-		box{0,<l,h,0.1> texture{st}}
+		box{-0.1*z,<l,h,0.1> texture{st}}
 	#elseif(c="1")
-		box{0,<l,h,0.1> texture{wall}}
+		box{-0.1*z,<l,h,0.1> texture{wall}}
 	#elseif(c="2")
 		difference
 		{
-			box{0,<l,h,0.1>}
-			box{<0.5,1.0,-0.01>,<l-0.5,h-0.5,0.11>}
+			box{-0.1*z,<l,h,0.1>}
+			box{<0.5,1.0,-0.11>,<l-0.5,h-0.5,0.11>}
 			texture{wall}
 		}
 		union{win0(l-0.5+0.125,h-1.5,1,1.8,0.05,0.1,0.55) rotate -x*90 translate <l-1,h-1.5> scale 0.5 translate y*1+x*0.5+z*0.1}
 	#elseif(c="3")
 		difference
 		{
-			box{0,<l,h,0.1>}
-			box{<0.5,1.0,-0.01>,<l-0.5,h-0.5,0.11>}
-			box{<0.5,0.0,-0.01>,<1.25,h-0.5,0.11>}
+			box{-0.1*z,<l,h,0.1>}
+			box{<0.5,1.0,-0.11>,<l-0.5,h-0.5,0.11>}
+			box{<0.5,0.0,-0.11>,<1.25,h-0.5,0.11>}
 			texture{wall}
 		}
 		union{win0(l-1.75,h-1.5,1,3,0.05,0.1,0.55) rotate -x*90 translate <l-1.75,h-1.5> scale 0.5 translate y*1+x*1.25+z*0.1}
@@ -120,9 +126,9 @@ prism{
 	#elseif(c="4")
 		difference
 		{
-			box{0,<l,h,0.1>}
-			box{<0.5,1.0,-0.01>,<l-0.5,h-0.5,0.11>}
-			box{<0.5,0.0,-0.01>,<1.25,h-0.5,0.11>}
+			box{-0.1*z,<l,h,0.1>}
+			box{<0.5,1.0,-0.11>,<l-0.5,h-0.5,0.11>}
+			box{<0.5,0.0,-0.11>,<1.25,h-0.5,0.11>}
 			texture{wall}
 		}
 		union{win0(l-1.75,h-1.5,1,3,0.05,0.1,0.55) rotate -x*90 translate <l-1.75,h-1.5> scale 0.5 translate y*1+x*1.25+z*0.1}
@@ -160,6 +166,7 @@ prism{
  #local len=vlength(dp);
  #if(n<0)
  	#local ls=floor(len/2.5);
+ 	#if(ls<1)#local ls=1;#end
  #end
 
  #local wlen=0;
@@ -198,6 +205,10 @@ prism{
   }
   #local a=a+1;
  #end
+ union{
+	block0(0.0,2.5,".")
+	translate <p0.x,0,p0.y>
+	}
 #end
 
 
@@ -225,6 +236,17 @@ prism{
  }
 #end 
 
+#macro rel2abs(sc)
+#local i=0;
+#local cp=<0,0>;
+#while(i<NP)
+	#local cp=cp+h0p[i]*sc;
+	#declare h0p[i]=cp;
+	#local i=i+1;
+#end
+#end
+
+
 #declare roof=texture{pigment{color rgb <0.3,.3,.5>}}
 //#declare wall=texture{finish{diffuse 1 ambient 0.2} pigment{brick color rgb <.4,.45,.45> color rgb <1.0,.65,.22>}scale 0.035 }
 #declare wall=texture{finish{diffuse 1.2 ambient 0.3} pigment{/*brick color rgb <.4,.45,.45> */color rgb <1.0,1.05,1.2>}scale 0.035 }
@@ -248,14 +270,6 @@ prism{
 >
 };
 
-#declare i=0;
-#declare cp=<0,0>;
-#while(i<NP)
-	#declare cp=cp+h0p[i]*0.2;
-	#declare h0p[i]=cp;
-	#declare i=i+1;
-#end
-
 #declare h0s=array[100];
 #declare h0w=array[100];
 #declare h0n=array[100];
@@ -268,26 +282,27 @@ prism{
 #end
 
 
-#declare home1=
-union{
-#declare i=0;
-#while(i<15)
-union{
-	#declare j=0;
-	#while(j<NP)
-	floorst(h0p[j],h0p[mod(j+1,NP)],h0s[j],h0w[j],h0n[j])
-//	#declare j=1;
-//	floorst(h0p[j],h0p[j+1],h0s[j+1],h0w[j+1],h0n[j+1])
-//	floorst(<0,0>,<10,0>,"34","12",4)
-//	floorst(<10,0>,<10,10>,"4343","32",3)
-//	floorst(<10,10>,<0,0>,"1232","23",4)
-	#declare j=j+1;
+#declare floorh=0;
+
+//#macro floorst(p0,p1,s,l,n) #end
+
+#macro floors(N)
+	#local i=0;
+	#while(i<N)
+		union{
+			#declare j=0;
+			#while(j<NP)
+				floorst(h0p[j],h0p[mod(j+1,NP)],h0s[j],h0w[j],h0n[j])
+				#declare j=j+1;
+			#end
+			translate y*floorh
+			#declare floorh=floorh+2.5;
+		}
+		#local i=i+1;
 	#end
-	translate y*i*2.5
-}
-#declare i=i+1;
 #end
 
+#macro rooftop(n)
 prism
 {
  linear_sweep
@@ -300,15 +315,32 @@ prism
  #end
  h0p[0]
 	texture{roof}
- translate y*(15*2.5)
- }
+ translate y*floorh
+}
+#end
+
+#declare home1=union
+{
+#declare reversed=false;
+#declare NP=6;
+#declare h0p=array[NP]{<0,0><
+31.25,-56.24994><12.5,0><31.249999,56.24994><-6.25,6.25><-62.499999,0
+>};
+rel2abs(0.5)
+
+	floors(5)
+	rooftop(5)
+#declare NP=18;
+#declare h0p=array[NP]{<30,-50><
+		3.750023,-3.75002><7.499977,-2e-5><3.75,3.75004><0,18.7499><5,7.5><13.75,7.5001><4.999999,8.7499><-6.249999,8.75><-8.75,10e-5><-10,-6.25><-12.5,-10e-5><-10,6.25><-8.75,0><-6.25,-8.75><5,-8.75><13.75,-7.5><5,-7.5
+>};
+rel2abs(0.5)
+
+	floors(5)
+	rooftop(10)
 }
 
-fog{fog_type 2 distance 3.0 color rgb <0.8,0.95,1>*1.2
-	fog_offset 0.1
-	fog_alt 0.2
-	
-	}
-object{home1 scale 0.015 translate <-0.5,0,-0.5>}
-object{home1 scale 0.015 rotate -y*90 translate <-0.5,0,0>}
+
+object{home1 scale 0.025 translate <-0.5,0,-0.5>}
+object{home1 scale 0.025 rotate -y*90 translate <-0.5,0,0>}
 
