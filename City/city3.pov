@@ -319,6 +319,16 @@ prism
 }
 #end
 
+#macro start()
+	#declare h0p=array[100];#declare h0p[0]=<0,0>;
+	#declare h0s=array[100];#declare h0s[0]="0";
+	#declare h0w=array[100];#declare h0w[0]="1";
+	#declare h0n=array[100];#declare h0n[0]=-1;
+	#declare NP=0;
+#end
+
+#macro start()
+
 #declare home1=union
 {
 #declare reversed=false;
