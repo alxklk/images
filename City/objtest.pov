@@ -92,7 +92,17 @@ scale -y
 //texture{uv_mapping pigment{function{ft(x,y,z).gray}}}
 scale .5
 }
-	torus{1,0.5 rotate z*90 scale 0.15 translate -x*0.48+z*0.66 texture{st}}
+
+	#declare wx=0.47;
+	#declare wy=0.10;
+	#declare wz=0.71;
+	#declare wb=0.63;
+	#declare ws=0.15;
+
+	torus{1,0.5 rotate z*90 scale ws translate <-wx,wy,-wb> texture{st}}
+	torus{1,0.5 rotate z*90 scale ws translate < wx,wy,-wb> texture{st}}
+	torus{1,0.5 rotate z*90 scale ws translate <-wx,wy, wz> texture{st}}
+	torus{1,0.5 rotate z*90 scale ws translate < wx,wy, wz> texture{st}}
 }
 object{obj scale 0.45 rotate y*180 translate -x+y*0.5}
 object{obj scale 0.45 rotate y*90 translate -x-y*0.5}
