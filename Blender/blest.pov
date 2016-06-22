@@ -50,6 +50,16 @@ camera{
 	box{-1,1}
 }
 
+#declare Car=union
+{
+	box{-1,1}
+}
+
+#declare Tree_1=union
+{
+	box{-1,1}
+}
+
 #declare Camera=union
 {
 	box{-0.001,0.001}
@@ -60,13 +70,20 @@ camera{
 	box{-0.001,0.001}
 }
 
+#declare _Ground=union
+{
+	box{-0.001,0.001}
+}
+
 #declare obj=union
 {
-	box{-1,1 scale <1,0.01,0.5>*10 texture{smp pigment{checker color rgb 0.3 color rgb 0.7 scale 2}}}
+	box{-1,1 scale <1,0.001,1>*10 texture{smp pigment{checker color rgb 0.3 color rgb 0.7 scale 2}}}
 	union{
 		#include "blout.pov"	
 		texture{smp}
 		rotate -x*90
+		scale -x
+		rotate y*180
 		}
 	scale 0.1
 }
