@@ -80,6 +80,9 @@ blob{
 #include "textures.inc"
 #include "env.inc"
 
+#declare ars=array[100];
+#declare ars[0]=array[2]{<0,0><1,1>}
+
 #declare ft=function{pigment{image_map{png "carmap.png"}}}
 #declare obj=
 union{
@@ -103,6 +106,7 @@ scale .5
 	torus{1,0.5 rotate z*90 scale ws translate < wx,wy,-wb> texture{st}}
 	torus{1,0.5 rotate z*90 scale ws translate <-wx,wy, wz> texture{st}}
 	torus{1,0.5 rotate z*90 scale ws translate < wx,wy, wz> texture{st}}
+	translate ars[0][1]*0.1
 }
 object{obj scale 0.45 rotate y*180 translate -x+y*0.5}
 object{obj scale 0.45 rotate y*90 translate -x-y*0.5}

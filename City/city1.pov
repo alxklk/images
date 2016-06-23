@@ -228,7 +228,7 @@ union{
 
 object{house1 scale 0.1 translate <0.5,0,-0.5>}
 object{house2 scale 0.1 translate <0.5,0,0.5>}
-
+#declare home_tow=
 union{
 	union{ho1(1.5,1.5,2.75,1.25,0.01,0.1) rotate y*90 translate -z*3}
 	union{ho1(1.5,1.5,2.75,1.25,0.01,0.1) translate -x*3}

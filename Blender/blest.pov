@@ -57,7 +57,7 @@ camera{
 
 #declare Tree_1=union
 {
-	box{-1,1}
+	box{-1,1 texture{pigment{color rgb <0.5,1,0.2>}}}
 }
 
 #declare Camera=union
@@ -79,13 +79,32 @@ camera{
 {
 	box{-1,1 scale <1,0.001,1>*10 texture{smp pigment{checker color rgb 0.3 color rgb 0.7 scale 2}}}
 	union{
-		#include "blout.pov"	
+		#include "blout.pov"
+
+		#declare i=0;
+		#while(i<bcn)	
+			object{bcoa[i] scale bcsrt[i][0] rotate bcsrt[i][1] translate bcsrt[i][2]}
+			#declare i=i+1;
+		#end
+
+		#declare i=0;
+		#while(i<prn)	
+			object{proa[i] scale prsrt[i][0] rotate prsrt[i][1] translate prsrt[i][2]}
+			#declare i=i+1;
+		#end
+
+		#declare i=0;
+		#while(i<son)	
+			object{sooa[i] scale sosrt[i][0] rotate sosrt[i][1] translate sosrt[i][2]}
+			#declare i=i+1;
+		#end
+
 		texture{smp}
 		rotate -x*90
 		scale -x
 		rotate y*180
 		}
-	scale 0.1
+	scale 0.025
 }
 
 

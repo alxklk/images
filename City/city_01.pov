@@ -282,10 +282,18 @@ union{
 
 //create()
 
-
+/*
 blob{
  #declare maxnest=5;
  tree(true,true,false, 0,-0.1*y,y*0.5)
+ threshold 0.7
+ rotate y*30
+ translate -x*0.4
+} 
+*/
+blob{
+ #declare maxnest=5;
+ tree(true,true,true, 0,-0.1*y,y*0.5)
  threshold 0.7
  rotate y*30
  translate -x*0.4
@@ -294,10 +302,10 @@ blob{
 
 
 object{house translate -y*0.}
-/*
-#declare tree1=union{tree(0,-0.2*y,y*0.5,1)}
-#declare tree2=union{tree(0,-0.2*y,y*0.5,1)}
 
+//#declare tree1=union{tree(0,-0.2*y,y*0.5,1)}
+//#declare tree2=union{tree(0,-0.2*y,y*0.5,1)}
+/*
 #local i=0;
 #while(i<15)
  object{tree1 scale 0.2+rand(r)*.4 rotate y*rand(r)*560 translate 1.5*x*(rand(r)-0.5)+1.5*z*(rand(r)-0.5)}  
