@@ -50,15 +50,25 @@ camera{
 	box{-1,1}
 }
 
-#declare Car=union
+#macro Car(sc,rt,tr)
+union
 {
 	box{-1,1}
+	scale sc rotate rt translate tr
 }
+#end
 
-#declare Tree_1=union
+#declare trrnd=seed(12341234);
+#macro Tree_1(sc,rt,tr)
+union
 {
-	box{-1,1 texture{pigment{color rgb <0.5,1,0.2>}}}
+	box{-1,1 texture{pigment{color rgb <0.2+rand(trrnd)*0.3,1+rand(trrnd)*0.3,0.1+rand(trrnd)*0.1>}}}
+	translate z
+	rotate z*90*rand(trrnd)
+	scale 0.7+rand(trrnd)*0.6
+	scale sc rotate rt translate tr
 }
+#end
 
 #declare Camera=union
 {
@@ -95,7 +105,9 @@ camera{
 
 		#declare i=0;
 		#while(i<son)	
-			object{sooa[i] scale sosrt[i][0] rotate sosrt[i][1] translate sosrt[i][2]}
+			object{sooa[i]
+				// scale sosrt[i][0] rotate sosrt[i][1] translate sosrt[i][2]
+				}
 			#declare i=i+1;
 		#end
 

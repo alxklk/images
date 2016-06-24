@@ -72,7 +72,7 @@ union{
 
 //create()
 
-/*
+
 blob{
  #declare maxnest=5;
  tree(true,true,false, 0,-0.1*y,y*0.5)
@@ -81,9 +81,9 @@ blob{
  translate -x*0.4
 } 
 
-*/
 
-object{house scale 0.5 translate -y*0.}
+
+//object{house scale 0.5 translate -y*0.}
 
 plane{-y,1 texture{desert}}
 

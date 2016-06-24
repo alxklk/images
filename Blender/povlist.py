@@ -56,7 +56,7 @@ def povlist() :
 					f.write("};\n")
 
 					f.write("#declare proa[%i]=\n"%prn)
-					f.write("prism{\n\tlinear_sweep\n\tlinear_spline 0,-%8.6f\n\tprna[%i]\n"%(s.points[0].co.z,prn))
+					f.wrDite("prism{\n\tlinear_sweep\n\tlinear_spline 0,-%8.6f\n\tprna[%i]\n"%(s.points[0].co.z,prn))
 					f.write("#declare i=0;\n#while(i<prna[%i])\n\t<praa[%i][i].x,praa[%i][i].y>\n\t#declare i=i+1;\n#end\n"%(prn,prn,prn))
 					f.write("\trotate -x*90\n")
 #					f.write("\n\tscale prsrt[%i][0]\n\trotate prsrt[%i][1]\n\ttranslate prsrt[%i][2]\n\t"%(prn,prn,prn))
@@ -99,7 +99,9 @@ def povlist() :
 				name=v.name[0:dotindex]
 			f.write("#declare sooa[%i]=object{"%son)
 			f.write(name)
-			f.write("}\n")
+			f.write("(");
+			printsrt(f,v)
+			f.write(")}\n")
 
 			f.write("#declare sosrt[%i]=array[3]{"%son)
 			printsrt(f,v)

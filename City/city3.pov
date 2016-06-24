@@ -90,8 +90,11 @@ prism{
 }
 */
 
-#macro block0(l,h,c)
-#debug c
+#declare rnd=seed(234124);
+
+#macro block0(p,a,l,h,c)
+//#debug c
+	union{
 	#if(c=" ")
 	#elseif(c=".")
 		cylinder{0,h*y,0.1 texture{wall}}
@@ -121,8 +124,12 @@ prism{
 		{
 			box{0,<l,h/2,-h/2>}
 			box{<0.1,0.1,-h/2+0.1>,<l-0.1,h*2+0.1,0.1>}
-			texture{balc}
+			texture{balc pigment{color rgb <p.x*0.1,1-p.y*0.01, p.y*0.01>}}
 		}
+		box{<0,h-0.1,0>,<l,h,-h/2>
+			texture{balc pigment{color rgb <p.x*0.1,1-p.y*0.01, p.y*0.01>}}
+			}
+		
 	#elseif(c="4")
 		difference
 		{
@@ -142,192 +149,18 @@ prism{
 		}
 	#elseif(c="5")
 		union{win0(l,h,1.6,2,0.05,0.1,0.55) rotate -x*90 translate <l,h,0> scale 0.5 translate z*0.1}
-	#end
-#end
-
-#declare weight=1;
-
-#macro s2w(s)
-  	#if(!strcmp(s,"1"))#declare weight=1;#end
-  	#if(!strcmp(s,"2"))#declare weight=2;#end
-  	#if(!strcmp(s,"3"))#declare weight=3;#end
-  	#if(!strcmp(s,"4"))#declare weight=4;#end
-  	#if(!strcmp(s,"5"))#declare weight=5;#end
-  	#if(!strcmp(s,"6"))#declare weight=6;#end
-  	#if(!strcmp(s,"7"))#declare weight=7;#end
-  	#if(!strcmp(s,"8"))#declare weight=8;#end
-  	#if(!strcmp(s,"9"))#declare weight=9;#end
-#end
-
-#macro floorst(p0,p1,s,l,n)
-
- #local ls=n;
- #local dp=p1-p0;
- #local len=vlength(dp);
- #if(n<0)
- 	#local ls=floor(len/2.5);
- 	#if(ls<1)#local ls=1;#end
- #end
-
- #local wlen=0;
- #local a=0;
- #while(a<ls)
-  s2w(substr(l,mod(a,strlen(l))+1,1))
-  #local ll=weight;
-  #declare wlen=wlen+ll;
-  #local a=a+1;
- #end
-
- #local a=0;
- #local pl=0;
- #while(a<ls)
-  #local char=substr(s,mod(a,strlen(s))+1,1)
-  s2w(substr(l,mod(a,strlen(l))+1,1))
-  #local ll=weight;
-  
-  union{
-  	block0(len*ll/wlen,2.5,char)
-  	#if(reversed) scale <1,1,-1>#end
-//  	cylinder{0.1*x,len*ll*x/wlen,0.1 translate y*3}
-  	#if(dp.y=0)
-  		#if(dp.x<0)
-		  	rotate -90*y
-		#else
-		  	rotate 90*y
-		#end
 	#else
-	  	rotate atan2(dp.x,dp.y)*180/pi*y
+		box{-0.1*z,<l,h,0.1> texture{wall}}
 	#end
-  	rotate -y*90
-    #local pos=(p0+dp*pl/wlen);
-  	translate <pos.x,0,pos.y> 
-  	#local pl=pl+weight; 
-  }
-  #local a=a+1;
- #end
- union{
-	block0(0.0,2.5,".")
-	translate <p0.x,0,p0.y>
+		rotate -y*90
+		rotate a*y
+		translate p
 	}
 #end
 
-
-#macro win0(wx,wz,nx,ny,d,f,l)
- union{
-	box{<-wx,-d,-wz>,<wx,d,wz> texture{glass}}
-	union{
-	box{-1,1 scale <wx+f,d*2,f> translate  z*wz}
-	box{-1,1 scale <wx+f,d*2,f> translate -z*wz}
-	box{-1,1 scale <f,d*2,wz+f> translate  x*wx}
-	box{-1,1 scale <f,d*2,wz+f> translate -x*wx}
-    #local i=1;
-    #while(i<nx-0.001)
-		box{-1,1 scale <wx+f,d*2,f/2> translate z*(i-nx/2)*wz/nx*2}
-		#local i=i+1;
-	#end
-    #local i=1;
-    #while(i<ny-0.001)
-		box{-1,1 scale <f/2,d*2,wz+f> translate -x*(i-ny/2)*wx/ny*2}
-		#local i=i+1;
-	#end
-		
-	texture{frame}
-	}
- }
-#end 
-
-#macro rel2abs(sc)
-#local i=0;
-#local cp=<0,0>;
-#while(i<NP)
-	#local cp=cp+h0p[i]*sc;
-	#declare h0p[i]=cp;
-	#local i=i+1;
-#end
-#end
-
-
-#declare roof=texture{pigment{color rgb <0.3,.3,.5>}}
-//#declare wall=texture{finish{diffuse 1 ambient 0.2} pigment{brick color rgb <.4,.45,.45> color rgb <1.0,.65,.22>}scale 0.035 }
-#declare wall=texture{finish{diffuse 1.2 ambient 0.3} pigment{/*brick color rgb <.4,.45,.45> */color rgb <1.0,1.05,1.2>}scale 0.035 }
-#declare glass=texture{st}
-#declare frame=texture{sten pigment{color rgb 1}}
-#declare balc =texture{finish{diffuse 1 ambient 0.2} pigment{color rgb 1}}
-
-#declare reversed=false;
-#declare NP=9;
-#declare h0p=array[NP]{<0,10><30,0><30,-2><34,-2><34,0><64,0><64,10><30,10><5,20>};
-#declare h0s=array[9] {"232", "1",  "4",  "1",  "232",  "2",  "2",    "2",  "23"};
-#declare h0w=array[9] {  "2", "1",  "1",  "1",    "2",  "1",  "1",    "1",  "23"};
-#declare h0n=array[9] {   9 ,  1 ,   1 ,   1 ,     9 ,   5 ,   5 ,     5 ,    5 };
-
-
-#declare reversed=true;
-#declare NP=8;
-#declare h0p=array[NP]{
-<
-0,0><0,-190><-40,0><0,215><20,25><260,0><0,-50><-240,0
->
-};
-
-#declare h0s=array[100];
-#declare h0w=array[100];
-#declare h0n=array[100];
-#declare i=0;
-#while(i<100)
-	#declare h0s[i]="23";
-	#declare h0w[i]="12";
-	#declare h0n[i]=-5;
-	#declare i=i+1;
-#end
-
-
-#declare floorh=0;
-
-//#macro floorst(p0,p1,s,l,n) #end
-
-#macro floors(N)
-	#local i=0;
-	#while(i<N)
-		union{
-			#declare j=0;
-			#while(j<NP)
-				floorst(h0p[j],h0p[mod(j+1,NP)],h0s[j],h0w[j],h0n[j])
-				#declare j=j+1;
-			#end
-			translate y*floorh
-			#declare floorh=floorh+2.5;
-		}
-		#local i=i+1;
-	#end
-#end
-
-#macro rooftop(n)
-prism
-{
- linear_sweep
- linear_spline
- 0,0.1,NP+1
- #declare j=0;
- #while(j<NP)
-	h0p[j]
- #declare j=j+1;
- #end
- h0p[0]
-	texture{roof}
- translate y*floorh
-}
-#end
-
-#macro start()
-	#declare h0p=array[100];#declare h0p[0]=<0,0>;
-	#declare h0s=array[100];#declare h0s[0]="0";
-	#declare h0w=array[100];#declare h0w[0]="1";
-	#declare h0n=array[100];#declare h0n[0]=-1;
-	#declare NP=0;
-#end
-
-#macro start()
+#include "housegen.inc"
+#include "win0.inc"
+//#macro start()
 
 #declare home1=union
 {
