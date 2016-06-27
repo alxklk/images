@@ -116,18 +116,21 @@
 
 
 
-#declare h0p=array[100];
-#declare h0s=array[100];
-#declare h0w=array[100];
-#declare h0n=array[100];
+#declare h0p=array[500];
+#declare h0s=array[500];
+#declare h0w=array[500];
+#declare h0n=array[500];
+#debug "House included "
 #declare i=0;
-#while(i<100)
+#while(i<500)
 	#declare h0p[i]=<0,0,0>;
 	#declare h0s[i]="23";
 	#declare h0w[i]="12";
 	#declare h0n[i]=-5;
 	#declare i=i+1;
 #end
+
+#debug concat("i=",str(i,0,0),"\n")
 
 #declare reversed=true;
 #declare NP=8;
@@ -147,6 +150,7 @@
 		union{
 			#declare j=0;
 			#while(j<NP)
+				#debug concat("\nj=",str(j,0,0),", h0s[j]=",h0s[j],"\n")
 				floorst(h0p[j],h0p[mod(j+1,NP)],floorh,h0s[j],h0w[j],h0n[j])
 				#declare j=j+1;
 			#end
@@ -162,12 +166,15 @@ prism
 {
  linear_sweep
  linear_spline
+ #debug concat("\nSpline ",str(NP+1,0,0),"\n")
  0,0.1,NP+1
  #declare j=0;
  #while(j<NP)
+ #debug concat(" ",vstr(h0p[j],0,0),",")
 	h0p[j]
  #declare j=j+1;
  #end
+ #debug concat(" ",vstr(h0p[0],0,0),",")
  h0p[0]
 	texture{roof}
  translate y*floorh

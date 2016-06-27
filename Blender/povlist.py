@@ -24,12 +24,19 @@ def povlist() :
 	f.write("#declare proa=array[1000];// prizm objects array\n")
 	f.write("#declare prna=array[1000];// prizm point number array\n")
 	f.write("#declare prsrt=array[1000];// prizm scale rotate translate\n")
+	f.write("#declare prnames=array[1000];// prizm names\n")
+	f.write("#declare prha=array[1000];// prizm heights\n")
+
 	f.write("#declare bcaa=array[1000];// bezier curve points array array\n")
 	f.write("#declare bcoa=array[1000];// bezier curve objects array\n")
 	f.write("#declare bcna=array[1000];// bezier curve point number array\n")
 	f.write("#declare bcsrt=array[1000];// bezier curve scale rotate translate\n")
+	f.write("#declare bcnames=array[1000];// bezier curve names\n")
+	f.write("#declare bcha=array[1000];// bezier curve heights\n")
+
 	f.write("#declare sooa=array[1000];//simple object array\n")
 	f.write("#declare sosrt=array[1000];// simple object scale rotate translate\n")
+	f.write("#declare sonames=array[1000];// simple object names\n")
 
 	prn=0
 	bcn=0
@@ -55,8 +62,11 @@ def povlist() :
 					printsrt(f,v)
 					f.write("};\n")
 
+					f.write("#declare prha[%i]=%8.6f;\n"%(prn,v.data.extrude));
+					f.write("#declare prnames[%i]=\"%s\";\n"%(prn,v.name));
+
 					f.write("#declare proa[%i]=\n"%prn)
-					f.wrDite("prism{\n\tlinear_sweep\n\tlinear_spline 0,-%8.6f\n\tprna[%i]\n"%(s.points[0].co.z,prn))
+					f.write("prism{\n\tlinear_sweep\n\tlinear_spline -1,1\n\tprna[%i]\n"%prn)
 					f.write("#declare i=0;\n#while(i<prna[%i])\n\t<praa[%i][i].x,praa[%i][i].y>\n\t#declare i=i+1;\n#end\n"%(prn,prn,prn))
 					f.write("\trotate -x*90\n")
 #					f.write("\n\tscale prsrt[%i][0]\n\trotate prsrt[%i][1]\n\ttranslate prsrt[%i][2]\n\t"%(prn,prn,prn))
@@ -84,8 +94,11 @@ def povlist() :
 					printsrt(f,v)
 					f.write("};\n")
 
+					f.write("#declare bcha[%i]=%8.6f;\n"%(bcn,v.data.extrude));
+					f.write("#declare bcnames[%i]=\"%s\";\n"%(bcn,v.name));
+
 					f.write("#declare bcoa[%i]=\n"%bcn)
-					f.write("prism{\n\tlinear_sweep\n\tbezier_spline 0,-%8.6f\n\tbcna[%i]\n"%(s.bezier_points[0].co.z,bcn))
+					f.write("prism{\n\tlinear_sweep\n\tbezier_spline -1,1\n\tbcna[%i]\n"%bcn)
 					f.write("#declare i=0;\n#while(i<bcna[%i])\n\t<bcaa[%i][i].x,bcaa[%i][i].y>\n\t#declare i=i+1;\n#end\n"%(bcn,bcn,bcn))
 					f.write("\trotate -x*90\n")
 #					f.write("\n\tscale bcsrt[%i][0]\n\trotate bcsrt[%i][1]\n\ttranslate bcsrt[%i][2]\n\t"%(bcn,bcn,bcn))
@@ -106,6 +119,8 @@ def povlist() :
 			f.write("#declare sosrt[%i]=array[3]{"%son)
 			printsrt(f,v)
 			f.write("};\n")
+
+			f.write("#declare sonames[%i]=\"%s\";\n"%(son,v.name));
 
 			son=son+1
 			print("\nobject OK\n")
