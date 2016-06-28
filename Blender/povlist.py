@@ -66,8 +66,9 @@ def povlist() :
 					f.write("#declare prnames[%i]=\"%s\";\n"%(prn,v.name));
 
 					f.write("#declare proa[%i]=\n"%prn)
-					f.write("prism{\n\tlinear_sweep\n\tlinear_spline -1,1\n\tprna[%i]\n"%prn)
+					f.write("prism{\n\tlinear_sweep\n\tlinear_spline -1,1\n\tprna[%i]+1\n"%prn)
 					f.write("#declare i=0;\n#while(i<prna[%i])\n\t<praa[%i][i].x,praa[%i][i].y>\n\t#declare i=i+1;\n#end\n"%(prn,prn,prn))
+					f.write("<praa[%i][0].x,praa[%i][0].y>\n"%(prn,prn))
 					f.write("\trotate -x*90\n")
 #					f.write("\n\tscale prsrt[%i][0]\n\trotate prsrt[%i][1]\n\ttranslate prsrt[%i][2]\n\t"%(prn,prn,prn))
 					f.write("}\n")

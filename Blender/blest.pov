@@ -12,7 +12,7 @@ light_source
 	parallel
 	point_at 0
 	rotate x*35
-	rotate -y*45
+	rotate y*45
 }
 
 light_source
@@ -20,8 +20,8 @@ light_source
 	-z,color rgb 0.5
 	parallel
 	point_at 0
-	rotate -x*25
-	rotate y*40
+	rotate x*65
+	rotate -y*130
 }
 
 
@@ -47,12 +47,14 @@ camera{
 
 #declare Cube=union
 {
+	box{-0.001,0.001}
 	box{-1,1}
 }
 
 #macro Car(sc,rt,tr)
 union
 {
+	box{-0.001,0.001}
 	box{-1,1}
 	scale sc rotate rt translate tr
 }
@@ -62,6 +64,7 @@ union
 #macro Tree_1(sc,rt,tr)
 union
 {
+	box{-0.001,0.001}
 	box{-1,1 texture{pigment{color rgb <0.2+rand(trrnd)*0.3,1+rand(trrnd)*0.3,0.1+rand(trrnd)*0.1>}}}
 	translate z
 	rotate z*90*rand(trrnd)
@@ -73,15 +76,18 @@ union
 #declare Camera=union
 {
 	box{-0.001,0.001}
+	box{-0.001,0.001}
 }
 
 #declare Lamp=union
 {
 	box{-0.001,0.001}
+	box{-0.001,0.001}
 }
 
 #declare _Ground=union
 {
+	box{-0.001,0.001}
 	box{-0.001,0.001}
 }
 
@@ -107,6 +113,8 @@ union
 #macro block0(p,a,l,h,c)
 //#debug c
 	union{
+		box{-0.001,0.001}
+		box{-0.001,0.001}
 	#if(c=" ")
 	#elseif(c=".")
 		cylinder{0,h*y,0.1 texture{wall}}
@@ -170,10 +178,9 @@ union
 	}
 #end
 
-
 #declare obj=union
 {
-	box{-1,1 scale <1,0.001,1>*10 texture{smp pigment{checker color rgb 0.3 color rgb 0.7 scale 2}}}
+	box{-1,1 scale <1,0.00001,1>*1000 texture{smp pigment{checker color rgb 0.3 color rgb 0.7 scale 2}}}
 	union{
 		#include "blout.pov"
 
@@ -185,7 +192,7 @@ union
 
 		#declare i=0;
 		#while(i<prn)	
-			#if(fd(prnames[i])="House")
+			#if (fd(prnames[i])="House1")
 			object{proa[i] scale prsrt[i][0] rotate prsrt[i][1] translate prsrt[i][2] scale z*0.1 translate z*(8*2.5-0.2)}
 			union
 			{
@@ -194,13 +201,15 @@ union
 				#declare NP=prna[i];
 				#debug concat("\nNP=",str(NP,0,0),"\n")
 				#declare h0p=praa[i];
+				box{-0.001,0.001}
+				box{-0.001,0.001}
 				floors(8)
 //				rooftop(7)
 				rotate x*90
 				scale prsrt[i][0] rotate prsrt[i][1] translate prsrt[i][2]
 			}
 			#else
-			object{proa[i] scale prsrt[i][0] rotate prsrt[i][1] translate prsrt[i][2] scale z*0.1}
+			object{proa[i] scale prsrt[i][0] rotate prsrt[i][1] translate prsrt[i][2] scale z*prha[i]/2 translate z*prha[i]/2}
 			
 			#end
 			#debug concat("<",fd(prnames[i]),">")
@@ -224,10 +233,12 @@ union
 	scale 0.025
 }
 
+#declare test4=
+union{
+	object{obj scale 0.45 rotate y*180 translate -x+y*0.5}
+	object{obj scale 0.45 rotate y*90 translate -x-y*0.5}
+	object{obj scale 0.45 rotate y*135 rotate x*-35 translate  x+y*0.5}
+	object{obj scale 0.45 rotate y*0 rotate x*-90 translate  x-y*0.5}
+}
 
-//object{obj scale 0.45 rotate y*180 translate -x+y*0.5}
-//object{obj scale 0.45 rotate y*90 translate -x-y*0.5}
-object{obj scale 0.45 rotate y*135 rotate x*-35 translate  x+y*0.5}
-//object{obj scale 0.45 rotate y*0 rotate x*-90 translate  x-y*0.5}
-
-
+object{obj rotate y*135 rotate x*-35 translate y*0.5}
