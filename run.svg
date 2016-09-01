@@ -16,7 +16,10 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    shape-rendering="crispEdges"
-   sodipodi:docname="run.svg">
+   sodipodi:docname="run.svg"
+   inkscape:export-filename="D:\wrk\images\path4771.png"
+   inkscape:export-xdpi="72"
+   inkscape:export-ydpi="72">
   <defs
      id="defs4150" />
   <sodipodi:namedview
@@ -27,10 +30,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="-213.44827"
-     inkscape:cy="-48.786428"
+     inkscape:cx="-16.993572"
+     inkscape:cy="-86.960464"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      showgrid="false"
      units="pt"
      inkscape:snap-others="false"
@@ -154,4 +157,8 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
   </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer 2" />
 </svg>
